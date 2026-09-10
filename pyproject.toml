@@ -1,0 +1,16 @@
+[project]
+name = "repo-activity-pipeline"
+version = "0.1.0"
+description = "Incremental ingestion of GitHub repository activity from the REST API into Postgres, with dbt transforms and Airflow orchestration."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "psycopg2>=2.9.12",
+    "requests>=2.32.0",
+]
+
+[dependency-groups]
+dev = [
+    "dbt-postgres>=1.9",
+]
