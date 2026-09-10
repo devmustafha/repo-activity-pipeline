@@ -1,0 +1,6 @@
+# Extra Python deps baked into the project's Airflow image (see Dockerfile).
+# Keep versions aligned with pyproject.toml / uv.lock where they overlap.
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.1
+requests>=2.32.0
+dbt-postgres>=1.9,<2.0
