@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+  - name: github
+    description: >
+      GitHub repository activity ingested directly from the REST API by
+      github_activity/ingest.py. One row per natural key (the ingester upserts),
+      plus a _loaded_at audit column.
+    schema: github
+    tables:
+      - name: commits
+        description: One row per commit, keyed on (repo_full_name, sha).
+        columns:
+          - name: sha
+            data_tests: [not_null]
+          - name: repo_full_name
+            data_tests: [not_null]
+      - name: issues
+        description: >
+          One row per issue, keyed on (repo_full_name, number). The GitHub
+          issues endpoint also returns pull requests; is_pull_request splits them.
+        columns:
+          - name: number
+            data_tests: [not_null]
+          - name: repo_full_name
+            data_tests: [not_null]
+      - name: pull_requests
+        description: One row per pull request, keyed on (repo_full_name, number).
+        columns:
+          - name: number
+            data_tests: [not_null]
+          - name: repo_full_name
+            data_tests: [not_null]
+      - name: ingestion_state
+        description: Incremental high-water mark, one row per (repo_full_name, resource).

@@ -1,0 +1,23 @@
+# dbt connection profile.
+#
+# All values come from the environment so the same file works locally, in CI
+# and inside the Airflow container. Point dbt at this directory with
+# DBT_PROFILES_DIR=./dbt (see the README and the Airflow DAG).
+#
+# Reuses the same DB_* variables as github_activity/ingest.py so there is one
+# source of truth for the Postgres connection in .env.
+
+repo_activity:
+  target: "{{ env_var('DBT_TARGET', 'dev') }}"
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DB_HOST') }}"
+      port: "{{ env_var('DB_PORT', '5432') | int }}"
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PASSWORD') }}"
+      dbname: "{{ env_var('DB_NAME') }}"
+      schema: "{{ env_var('DBT_SCHEMA', 'repo_activity') }}"
+      threads: "{{ env_var('DBT_THREADS', '4') | int }}"
+      sslmode: "{{ env_var('DB_SSLMODE', 'require') }}"
+      keepalives_idle: 30

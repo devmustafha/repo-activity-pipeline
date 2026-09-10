@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_github__commits
+    description: One row per commit, with a surrogate commit_key and first-line message subject.
+    columns:
+      - name: commit_key
+        data_tests: [not_null, unique]
+      - name: repo_full_name
+        data_tests: [not_null]
+      - name: sha
+        data_tests: [not_null]
+      - name: committed_at
+        data_tests: [not_null]
+
+  - name: stg_github__issues
+    description: One row per true issue (pull requests excluded).
+    columns:
+      - name: issue_number
+        data_tests: [not_null]
+      - name: state
+        data_tests:
+          - accepted_values:
+              values: [open, closed]
+      - name: repo_full_name
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [repo_full_name, issue_number]
+
+  - name: stg_github__pull_requests
+    description: One row per pull request, with merge-lead-time in days.
+    columns:
+      - name: pr_number
+        data_tests: [not_null]
+      - name: state
+        data_tests:
+          - accepted_values:
+              values: [open, closed]
+      - name: repo_full_name
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [repo_full_name, pr_number]
